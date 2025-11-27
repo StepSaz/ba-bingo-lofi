@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="BA Bingo: интерактивная игра для бизнес-аналитиков с Lofi атмосферой">
-    <meta name="keywords" content="бизнес аналитик, бинго, игра, IT, разработка, lofi">
+    <meta name="description" content="BA Bingo: bingo game for business analysts and dev teams">
+    <meta name="keywords" content="business analyst, bingo, game, IT, development, requirements, BA, lofi, agile, scrum">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="BA Bingo: Lofi Edition">
-    <meta property="og:description" content="Интерактивная игра для бизнес-аналитиков с расслабляющей Lofi атмосферой">
+    <meta property="og:description" content="BA Bingo: bingo game for business analysts and dev teams">
     <meta property="og:image" content="https://raw.githubusercontent.com/StepSaz/ba-bingo-lofi/main/preview.png">
 
     <title>BA Bingo: Lofi Edition</title>
@@ -148,7 +148,7 @@
         }
 
         /* Content with z-index above effects */
-        header, .controls, #bingo-container, .start-screen {
+        header, .controls, #bingo-container, .start-screen, #game-area {
             position: relative;
             z-index: 2;
         }
@@ -156,6 +156,24 @@
         header {
             text-align: center;
             margin-bottom: 20px;
+        }
+
+        #game-area {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            align-items: flex-start;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        #bingo-container {
+            grid-column: 2;
+        }
+
+        .score-display {
+            grid-column: 3;
+            justify-self: start;
         }
 
         h1 {
@@ -182,27 +200,97 @@
             display: flex;
             gap: 12px;
             justify-content: center;
+            align-items: center;
             width: 100%;
-            max-width: 500px;
+            max-width: 700px;
+            flex-wrap: wrap;
+        }
+
+        .lang-switcher {
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            max-width: 100px;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .lang-flag {
+            font-size: 1.2rem;
+        }
+
+        .lang-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(244, 114, 182, 0.1));
+            border: 3px solid var(--warm-yellow);
+            padding: 20px 30px;
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5),
+                        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+            min-width: 140px;
+        }
+
+        .score-label {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            color: var(--warm-yellow);
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
+            letter-spacing: 1px;
+        }
+
+        .score-value {
+            font-family: 'VT323', monospace;
+            font-size: 3.5rem;
+            color: var(--warm-yellow);
+            font-weight: 400;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 1),
+                         0 0 60px rgba(251, 191, 36, 0.6);
         }
 
         button {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: var(--text-color);
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 20px;
             cursor: pointer;
             font-family: 'Quicksand', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             flex: 1;
-            max-width: 160px;
+            max-width: 180px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2),
                         inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+            display: inline-block;
+        }
+
+        .btn-text {
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
         }
 
         button:hover {
@@ -220,6 +308,24 @@
         button:focus-visible {
             outline: 2px solid var(--sunset-pink);
             outline-offset: 2px;
+        }
+
+        #restart-btn:hover .btn-icon {
+            animation: spin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #screenshot-btn:hover .btn-icon {
+            animation: bounce-up 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce-up {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
         }
 
         /* Retro Media Player Container */
@@ -387,6 +493,29 @@
             transform: translateY(0);
         }
 
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.35);
+            z-index: 1001;
+            letter-spacing: 0.5px;
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.25s ease;
+        }
+
+        footer a:hover {
+            color: var(--sunset-pink);
+        }
+
         /* Start Screen */
         .start-screen {
             position: fixed;
@@ -407,6 +536,12 @@
         .start-screen.hidden {
             opacity: 0;
             pointer-events: none;
+        }
+
+        .lang-switcher-start {
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
 
         .start-screen h2 {
@@ -457,7 +592,7 @@
         }
 
         body.not-started .controls,
-        body.not-started #bingo-container {
+        body.not-started #game-area {
             opacity: 0;
             pointer-events: none;
         }
@@ -468,7 +603,24 @@
 
             h1 { font-size: 2.5rem; }
 
-            #bingo-container { padding: 15px; max-width: 100%; }
+            #game-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            #bingo-container {
+                grid-column: 1;
+                padding: 15px;
+                max-width: 100%;
+            }
+
+            .score-display {
+                grid-column: 1;
+                justify-self: center;
+                min-width: auto;
+                width: 100%;
+                max-width: 200px;
+            }
 
             .card {
                 font-size: 0.78rem;
@@ -515,30 +667,55 @@
 
     <!-- Start Screen -->
     <div class="start-screen" id="start-screen">
+        <button id="lang-btn-start" aria-label="Switch language" class="lang-switcher lang-switcher-start">
+            <span class="lang-flag">🇬🇧</span>
+            <span class="lang-text">EN</span>
+        </button>
         <h2>BA BINGO</h2>
-        <p>
-            Игра для бизнес-аналитиков и команд разработки.<br>
-            Отмечайте знакомые ситуации и собирайте линии!
+        <p id="start-description" data-lang-ru="Игра для бизнес-аналитиков и всех, кто в IT.<br>Отмечайте знакомые ситуации и собирайте линии!" data-lang-en="A game for business analysts and everyone in IT.<br>Mark familiar situations and collect lines!">
+            A game for business analysts and everyone in IT.<br>
+            Mark familiar situations and collect lines!
         </p>
-        <button id="start-btn" aria-label="Начать игру">▶ Старт</button>
+        <button id="start-btn" aria-label="Start game">
+            <span data-lang-ru="▶ Старт" data-lang-en="▶ Start">▶ Start</span>
+        </button>
     </div>
 
     <header>
         <h1>BA BINGO</h1>
-        <div class="subtitle">Relax & Requirements</div>
+        <div class="subtitle">Relax, Collect Points, Share</div>
     </header>
 
     <div class="controls">
-        <button id="restart-btn" aria-label="Перезапустить игру">🔄 Рестарт</button>
-        <button id="screenshot-btn" aria-label="Сделать скриншот">📸 Скрин</button>
+        <button id="lang-btn" aria-label="Switch language" class="lang-switcher">
+            <span class="lang-flag">🇬🇧</span>
+            <span class="lang-text">EN</span>
+        </button>
+        <button id="restart-btn" aria-label="Restart game">
+            <span class="btn-icon">↻</span>
+            <span class="btn-text" data-lang-ru="Рестарт" data-lang-en="Restart">Restart</span>
+        </button>
+        <button id="screenshot-btn" aria-label="Share">
+            <span class="btn-icon">⬆</span>
+            <span class="btn-text" data-lang-ru="Поделиться" data-lang-en="Share">Share</span>
+        </button>
     </div>
 
-    <div id="bingo-container">
-        <div class="grid" id="grid" role="grid" aria-label="Игровое поле бинго"></div>
+    <div id="game-area">
+        <div id="bingo-container">
+            <div class="grid" id="grid" role="grid" aria-label="Игровое поле бинго"></div>
+        </div>
+        <div class="score-display">
+            <span class="score-label" data-lang-ru="Очки" data-lang-en="Score">Score</span>
+            <span class="score-value" id="score">0</span>
+        </div>
     </div>
 
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
+
+    <!-- Footer -->
+    <footer>Created by Stepan S, 2025</footer>
 
     <noscript>
         <div style="text-align: center; margin-top: 20px; padding: 20px; background: rgba(255,0,0,0.1); border-radius: 12px; position: relative; z-index: 10;">
@@ -548,7 +725,7 @@
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" defer></script>
     <script>
-        const phrases = [
+        const phrasesRU = [
             "Это не баг, это фича", "У Вигерса так написано", "ТЗ_final_v12.docx",
             "Сделай красиво", "Сам догадайся", "А в сторе не так",
             "Мы передумали", "Поиграть со шрифтами", "Кнопка 'Сделать хорошо'",
@@ -562,8 +739,25 @@
             "Анализ ради анализа"
         ];
 
+        const phrasesEN = [
+            "It's not a bug, it's a feature", "BABOK says so", "requirements_final_v12.docx",
+            "Make it pretty", "You figure it out", "Not like in prod",
+            "We changed our mind", "Play with fonts", "Add 'Make it good' button",
+            "Just add a field", "Budget exists, but no", "Let's backlog it",
+            "Not in MVP", "Not documented", "Like Apple does",
+            "Works on my machine", "Mock the data", "It's legacy", "Let's hardcode it",
+            "Bug in requirements", "Test env is down", "Meeting instead of email",
+            "Nobody reads UML", "Forgot Confluence", "Deadline was yesterday",
+            "Clarification on clarification", "Git conflict", "Invalid JSON",
+            "5-minute call", "I see it this way", "Client doesn't know",
+            "Analysis for analysis sake"
+        ];
+
         const gridSize = 4;
         let boardState = [];
+        let currentLang = 'en';
+        let score = 0;
+        let completedLines = new Set(); // Track which lines have been completed
 
         // Fisher-Yates shuffle
         function shuffle(array) {
@@ -575,11 +769,47 @@
             return shuffled;
         }
 
+        function getCurrentPhrases() {
+            return currentLang === 'ru' ? phrasesRU : phrasesEN;
+        }
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+
+            // Update both language buttons
+            [document.getElementById('lang-btn'), document.getElementById('lang-btn-start')].forEach(langBtn => {
+                if (!langBtn) return;
+                const langFlag = langBtn.querySelector('.lang-flag');
+                const langText = langBtn.querySelector('.lang-text');
+
+                if (lang === 'ru') {
+                    langFlag.textContent = '🇷🇺';
+                    langText.textContent = 'RU';
+                } else {
+                    langFlag.textContent = '🇬🇧';
+                    langText.textContent = 'EN';
+                }
+            });
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-lang-ru]').forEach(el => {
+                const text = el.getAttribute('data-lang-' + lang);
+                if (el.id === 'start-description') {
+                    el.innerHTML = text;
+                } else {
+                    el.textContent = text;
+                }
+            });
+        }
+
         function generateBoard() {
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
             boardState = [];
-            const shuffledPhrases = shuffle(phrases).slice(0, gridSize * gridSize);
+            score = 0;
+            completedLines = new Set();
+            updateScore();
+            const shuffledPhrases = shuffle(getCurrentPhrases()).slice(0, gridSize * gridSize);
 
             shuffledPhrases.forEach((text, index) => {
                 const card = document.createElement('div');
@@ -603,6 +833,10 @@
             });
         }
 
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+
         function toggleCard(card, index) {
             const state = boardState[index];
             if (state.selected) return; // Prevent deselecting
@@ -610,17 +844,24 @@
             state.selected = true;
             card.classList.add('selected');
             card.setAttribute('aria-pressed', 'true');
+            score += 10;
+            updateScore();
             checkWin();
         }
 
         function checkWin() {
             const size = gridSize;
             let winningIndices = new Set();
+            let newCompletedLines = [];
 
             // Rows
             for (let i = 0; i < size; i++) {
                 if (boardState.slice(i * size, (i + 1) * size).every(c => c.selected)) {
                     for (let k = 0; k < size; k++) winningIndices.add(i * size + k);
+                    const lineId = `row-${i}`;
+                    if (!completedLines.has(lineId)) {
+                        newCompletedLines.push(lineId);
+                    }
                 }
             }
 
@@ -629,14 +870,47 @@
                 let colIndices = Array.from({length: size}, (_, j) => i + j * size);
                 if (colIndices.every(idx => boardState[idx].selected)) {
                     colIndices.forEach(idx => winningIndices.add(idx));
+                    const lineId = `col-${i}`;
+                    if (!completedLines.has(lineId)) {
+                        newCompletedLines.push(lineId);
+                    }
                 }
             }
 
             // Diagonals
             let d1 = Array.from({length: size}, (_, i) => i * (size + 1));
             let d2 = Array.from({length: size}, (_, i) => (i + 1) * (size - 1));
-            if (d1.every(idx => boardState[idx].selected)) d1.forEach(idx => winningIndices.add(idx));
-            if (d2.every(idx => boardState[idx].selected)) d2.forEach(idx => winningIndices.add(idx));
+            if (d1.every(idx => boardState[idx].selected)) {
+                d1.forEach(idx => winningIndices.add(idx));
+                const lineId = 'diag-1';
+                if (!completedLines.has(lineId)) {
+                    newCompletedLines.push(lineId);
+                }
+            }
+            if (d2.every(idx => boardState[idx].selected)) {
+                d2.forEach(idx => winningIndices.add(idx));
+                const lineId = 'diag-2';
+                if (!completedLines.has(lineId)) {
+                    newCompletedLines.push(lineId);
+                }
+            }
+
+            // Award bonus points for new lines
+            // Bonus increases with each line: 50, 100, 150, 200, etc.
+            newCompletedLines.forEach(lineId => {
+                completedLines.add(lineId);
+                const lineCount = completedLines.size;
+                const bonus = lineCount * 50;
+                score += bonus;
+
+                // Show bonus notification
+                const bonusMsg = currentLang === 'ru'
+                    ? `🎉 Линия ${lineCount}! Бонус +${bonus}`
+                    : `🎉 Line ${lineCount}! Bonus +${bonus}`;
+                showToast(bonusMsg);
+            });
+
+            updateScore();
 
             boardState.forEach((state, idx) => {
                 state.el.classList.toggle('bingo-line', winningIndices.has(idx));
@@ -646,11 +920,57 @@
         // Screenshot with clipboard copy
         async function takeScreenshot() {
             const btn = document.getElementById('screenshot-btn');
+            const btnIcon = btn.querySelector('.btn-icon');
+            const btnText = btn.querySelector('.btn-text');
             const element = document.getElementById("bingo-container");
 
             try {
                 btn.disabled = true;
-                btn.textContent = '⏳ Создание...';
+                const originalText = btnText.textContent;
+                btnIcon.textContent = '⏳';
+                btnText.textContent = currentLang === 'ru' ? 'Создание...' : 'Creating...';
+
+                // Create temporary overlay with score and URL
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: absolute;
+                    bottom: 15px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(30, 28, 42, 0.95);
+                    padding: 12px 24px;
+                    border-radius: 16px;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    backdrop-filter: blur(10px);
+                    font-family: 'Quicksand', sans-serif;
+                    text-align: center;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+                    z-index: 1000;
+                `;
+
+                const scoreText = document.createElement('div');
+                scoreText.style.cssText = `
+                    font-size: 1.1rem;
+                    color: #fbbf24;
+                    font-weight: 600;
+                    margin-bottom: 4px;
+                    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+                `;
+                scoreText.textContent = `${currentLang === 'ru' ? 'Очки' : 'Score'}: ${score}`;
+
+                const urlText = document.createElement('div');
+                urlText.style.cssText = `
+                    font-size: 0.85rem;
+                    color: #f472b6;
+                    font-weight: 500;
+                    letter-spacing: 0.5px;
+                `;
+                urlText.textContent = 'ba-bingo.netlify.app';
+
+                overlay.appendChild(scoreText);
+                overlay.appendChild(urlText);
+                element.style.position = 'relative';
+                element.appendChild(overlay);
 
                 const canvas = await html2canvas(element, {
                     backgroundColor: "#1e1c2a",
@@ -659,6 +979,9 @@
                     useCORS: true
                 });
 
+                // Remove overlay
+                element.removeChild(overlay);
+
                 // Convert to blob
                 canvas.toBlob(async (blob) => {
                     try {
@@ -666,20 +989,22 @@
                             new ClipboardItem({ 'image/png': blob })
                         ]);
 
-                        showToast('📸 Скриншот скопирован в буфер обмена!');
+                        showToast(currentLang === 'ru' ? '📸 Скриншот скопирован в буфер обмена!' : '📸 Screenshot copied to clipboard!');
                     } catch (err) {
                         console.error('Clipboard copy failed:', err);
-                        showToast('❌ Ошибка копирования. Попробуйте ещё раз.');
+                        showToast(currentLang === 'ru' ? '❌ Ошибка копирования. Попробуйте ещё раз.' : '❌ Copy failed. Try again.');
                     }
                 }, 'image/png');
 
-                btn.textContent = '📸 Скрин';
+                btnIcon.textContent = '⬆';
+                btnText.textContent = originalText;
                 btn.disabled = false;
 
             } catch (error) {
                 console.error('Screenshot failed:', error);
-                showToast('❌ Ошибка создания скриншота');
-                btn.textContent = '📸 Скрин';
+                showToast(currentLang === 'ru' ? '❌ Ошибка создания скриншота' : '❌ Screenshot failed');
+                btnIcon.textContent = '⬆';
+                btnText.textContent = currentLang === 'ru' ? 'Поделиться' : 'Share';
                 btn.disabled = false;
             }
         }
@@ -713,10 +1038,68 @@
             }, 500);
         }
 
+        // Language switcher
+        function switchLanguage() {
+            const newLang = currentLang === 'ru' ? 'en' : 'ru';
+
+            // If game is in progress, preserve state and translate cards
+            if (boardState.length > 0) {
+                const selectedIndices = boardState.map((state, idx) =>
+                    state.selected ? idx : null
+                ).filter(idx => idx !== null);
+
+                updateLanguage(newLang);
+
+                // Regenerate board with new language but keep selections
+                const grid = document.getElementById('grid');
+                grid.innerHTML = '';
+                const oldBoardState = [...boardState];
+                boardState = [];
+                const shuffledPhrases = shuffle(getCurrentPhrases()).slice(0, gridSize * gridSize);
+
+                shuffledPhrases.forEach((text, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerText = text;
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('tabindex', '0');
+                    card.setAttribute('aria-pressed', 'false');
+                    card.setAttribute('aria-label', text);
+
+                    // Restore selection if it was selected before
+                    if (selectedIndices.includes(index)) {
+                        card.classList.add('selected');
+                        card.setAttribute('aria-pressed', 'true');
+                    }
+
+                    card.addEventListener('click', () => toggleCard(card, index));
+                    card.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleCard(card, index);
+                        }
+                    });
+
+                    grid.appendChild(card);
+                    boardState.push({
+                        selected: selectedIndices.includes(index),
+                        el: card
+                    });
+                });
+
+                // Recheck win state
+                checkWin();
+            } else {
+                updateLanguage(newLang);
+            }
+        }
+
         // Event listeners
         document.getElementById('start-btn').addEventListener('click', startGame);
         document.getElementById('restart-btn').addEventListener('click', generateBoard);
         document.getElementById('screenshot-btn').addEventListener('click', takeScreenshot);
+        document.getElementById('lang-btn').addEventListener('click', switchLanguage);
+        document.getElementById('lang-btn-start').addEventListener('click', switchLanguage);
     </script>
 </body>
 </html>
