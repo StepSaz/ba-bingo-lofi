@@ -335,11 +335,111 @@
         .preview-actions button {
             flex: 0 1 auto;
         }
+
+        /* Start Screen */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transition: opacity 0.5s ease;
+        }
+
+        .start-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .start-screen h2 {
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 0 0 30px rgba(129, 140, 248, 0.5);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .start-screen p {
+            font-size: 1rem;
+            opacity: 0.7;
+            max-width: 400px;
+            text-align: center;
+            line-height: 1.6;
+            padding: 0 20px;
+        }
+
+        #start-btn {
+            font-size: 1.2rem;
+            padding: 20px 50px;
+            background: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            color: #fff;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(129, 140, 248, 0.3);
+            max-width: none;
+        }
+
+        #start-btn:hover {
+            background: rgba(129, 140, 248, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(129, 140, 248, 0.5);
+        }
+
+        #start-btn:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 30px rgba(129, 140, 248, 0.5); }
+            50% { text-shadow: 0 0 50px rgba(129, 140, 248, 0.8); }
+        }
+
+        /* Hide game elements initially */
+        body.not-started .controls,
+        body.not-started #bingo-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .start-screen h2 {
+                font-size: 2rem;
+            }
+
+            .start-screen p {
+                font-size: 0.9rem;
+            }
+
+            #start-btn {
+                font-size: 1rem;
+                padding: 16px 40px;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="not-started">
 
     <div class="ambient-glow" aria-hidden="true"></div>
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="start-screen">
+        <h2>BA BINGO</h2>
+        <p>
+            Игра для бизнес-аналитиков и команд разработки.<br>
+            Отмечайте знакомые ситуации и собирайте линии!
+        </p>
+        <button id="start-btn" aria-label="Начать игру">▶ Старт</button>
+    </div>
 
     <header>
         <h1>BA BINGO</h1>
@@ -357,8 +457,9 @@
 
     <div class="youtube-widget" aria-label="Lofi музыкальный плеер">
         <iframe
+            id="youtube-player"
             width="100%" height="100%"
-            src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&controls=1&rel=0&modestbranding=1&enablejsapi=1"
+            src=""
             title="Lofi Girl Radio - расслабляющая музыка для работы"
             frameborder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
@@ -591,8 +692,31 @@
             }
         });
 
-        // Initial board generation
-        generateBoard();
+        // Start Game Flow
+        function startGame() {
+            const startScreen = document.getElementById('start-screen');
+            const youtubePlayer = document.getElementById('youtube-player');
+
+            // Start music with autoplay
+            youtubePlayer.src = 'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&controls=1&rel=0&modestbranding=1&enablejsapi=1';
+
+            // Hide start screen
+            startScreen.classList.add('hidden');
+
+            // Show game elements
+            document.body.classList.remove('not-started');
+
+            // Generate board after animation
+            setTimeout(() => {
+                generateBoard();
+            }, 500);
+        }
+
+        // Start button listener
+        document.getElementById('start-btn').addEventListener('click', startGame);
+
+        // Note: Don't generate board on load anymore
+        // generateBoard(); -- removed
     </script>
 </body>
 </html>
