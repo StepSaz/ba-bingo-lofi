@@ -311,20 +311,6 @@
             }
         }
 
-        /* YouTube Widget - Desktop Only */
-        .youtube-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 280px;
-            height: 158px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 100;
-            background: #000;
-        }
 
         /* Loading state */
         .loading {
@@ -343,10 +329,6 @@
 
         /* --- MOBILE ADAPTATION --- */
         @media (max-width: 768px) {
-            .youtube-widget {
-                display: none !important;
-            }
-
             body {
                 padding-top: 10px;
             }
@@ -580,18 +562,6 @@
         <div class="grid" id="grid" role="grid" aria-label="Игровое поле бинго"></div>
     </div>
 
-    <div class="youtube-widget" aria-label="Lofi музыкальный плеер">
-        <iframe
-            id="youtube-player"
-            width="100%" height="100%"
-            src=""
-            title="Lofi Girl Radio - расслабляющая музыка для работы"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
-
     <!-- Preview Modal -->
     <div class="preview-modal" id="preview-modal" role="dialog" aria-labelledby="preview-title" aria-modal="true">
         <div class="preview-content">
@@ -820,10 +790,6 @@
         // Start Game Flow
         function startGame() {
             const startScreen = document.getElementById('start-screen');
-            const youtubePlayer = document.getElementById('youtube-player');
-
-            // Start music with autoplay
-            youtubePlayer.src = 'https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&controls=1&rel=0&modestbranding=1&enablejsapi=1';
 
             // Hide start screen
             startScreen.classList.add('hidden');
