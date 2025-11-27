@@ -1,0 +1,49 @@
+[build]
+  # Publish directory (для статических сайтов это корень)
+  publish = "."
+
+  # Команда сборки не требуется для Single Page App
+  command = "echo 'No build step required'"
+
+[[headers]]
+  # Применить ко всем файлам
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Cache control
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  # Агрессивное кеширование для статических ресурсов
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[redirects]]
+  # SPA fallback (если будут добавлены роуты)
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  # Версия Node.js (на случай будущего расширения)
+  NODE_VERSION = "20"
+
+# Настройки для разработки
+[context.deploy-preview]
+  # Для preview-деплоев
+  command = "echo 'Preview deployment'"
+
+[context.branch-deploy]
+  # Для деплоя из веток
+  command = "echo 'Branch deployment'"
