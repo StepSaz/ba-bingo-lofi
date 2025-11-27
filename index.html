@@ -3,84 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="BA Bingo: интерактивная игра для бизнес-аналитиков. Отмечайте типичные рабочие ситуации и собирайте Бинго!">
-    <meta name="keywords" content="бизнес аналитик, бинго, игра, IT, разработка">
+    <meta name="description" content="BA Bingo: интерактивная игра для бизнес-аналитиков с Lofi атмосферой">
+    <meta name="keywords" content="бизнес аналитик, бинго, игра, IT, разработка, lofi">
 
-    <!-- Open Graph / Social Media -->
+    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="BA Bingo: Lofi Edition">
-    <meta property="og:description" content="Интерактивная игра для бизнес-аналитиков с Lofi атмосферой">
+    <meta property="og:description" content="Интерактивная игра для бизнес-аналитиков с расслабляющей Lofi атмосферой">
     <meta property="og:image" content="https://raw.githubusercontent.com/StepSaz/ba-bingo-lofi/main/preview.png">
 
     <title>BA Bingo: Lofi Edition</title>
 
-    <!-- Preconnect для оптимизации -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.youtube.com">
-
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* Уютная темная база */
-            --bg-color: #1a1625;
-            --bg-secondary: #2d2438;
+            /* Lofi "Cozy Midnight Study Session" Palette */
+            --bg-color: #1e1c2a;
+            --bg-secondary: #2a2738;
 
-            /* Glassmorphism для карточек */
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --card-hover: rgba(255, 255, 255, 0.08);
+            /* Retro Accents */
+            --sunset-pink: #f472b6;
+            --warm-yellow: #fbbf24;
+            --retro-teal: #2dd4bf;
+            --purple-glow: #a78bfa;
 
-            /* Современные градиенты */
-            --accent-gradient: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
-            --accent-gradient-hover: linear-gradient(135deg, #c4b5fd 0%, #f9a8d4 100%);
-            --accent-color: #a78bfa;
+            /* Card styling */
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-hover: rgba(244, 114, 182, 0.15);
+            --card-selected: rgba(251, 191, 36, 0.25);
 
-            /* Цвета состояний */
-            --text-color: #f3f4f6;
-            --highlight-bg: rgba(167, 139, 250, 0.15);
-            --highlight-border: #a78bfa;
-            --win-color: #34d399;
-            --win-gradient: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            /* Typography */
+            --text-color: #e5e5e5;
+            --text-secondary: rgba(229, 229, 229, 0.7);
 
-            --mobile-breakpoint: 768px;
-        }
-
-        /* Minimal CSS Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
+            /* Win state */
+            --win-color: #2dd4bf;
+            --win-glow: rgba(45, 212, 191, 0.6);
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
         body {
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 0%, var(--bg-secondary) 0%, var(--bg-color) 100%);
+            font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-color);
             color: var(--text-color);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
             padding: 20px 10px;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Ambient Decoration - Animated Gradient Blobs */
+        /* Grain/Noise Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        /* CRT Scanlines Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        /* Floating Ambient Blobs */
         .ambient-glow {
             position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            z-index: -1;
+            z-index: 0;
             pointer-events: none;
             overflow: hidden;
         }
@@ -90,34 +117,40 @@
             content: '';
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.2;
-            animation: float 20s ease-in-out infinite;
+            filter: blur(100px);
+            opacity: 0.15;
+            animation: floatSlow 30s ease-in-out infinite;
         }
 
         .ambient-glow::before {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, #a78bfa 0%, transparent 70%);
-            top: -200px;
-            left: 10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--sunset-pink) 0%, transparent 70%);
+            top: -250px;
+            right: 10%;
             animation-delay: 0s;
         }
 
         .ambient-glow::after {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, #f472b6 0%, transparent 70%);
-            bottom: -150px;
-            right: 10%;
-            animation-delay: -10s;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--retro-teal) 0%, transparent 70%);
+            bottom: -200px;
+            left: 10%;
+            animation-delay: -15s;
         }
 
-        @keyframes float {
+        @keyframes floatSlow {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            25% { transform: translate(50px, -30px) scale(1.1); }
-            50% { transform: translate(-30px, 20px) scale(0.9); }
-            75% { transform: translate(40px, 40px) scale(1.05); }
+            25% { transform: translate(30px, -40px) scale(1.1); }
+            50% { transform: translate(-20px, 30px) scale(0.9); }
+            75% { transform: translate(25px, 50px) scale(1.05); }
+        }
+
+        /* Content with z-index above effects */
+        header, .controls, #bingo-container, .start-screen {
+            position: relative;
+            z-index: 2;
         }
 
         header {
@@ -126,102 +159,102 @@
         }
 
         h1 {
-            font-size: 1.8rem;
+            font-family: 'VT323', monospace;
+            font-size: 3rem;
             margin: 0 0 5px 0;
-            font-weight: 600;
-            background: var(--accent-gradient);
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--warm-yellow) 0%, var(--sunset-pink) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.3));
+            filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.4));
         }
 
         .subtitle {
-            font-size: 0.8rem;
-            opacity: 0.6;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
 
-        /* Controls */
+        /* Media Player Style Controls */
         .controls {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
             width: 100%;
+            max-width: 500px;
         }
 
         button {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: var(--text-color);
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 20px;
             cursor: pointer;
-            font-family: inherit;
-            font-size: 0.85rem;
-            transition: all 0.2s;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            -webkit-backdrop-filter: blur(10px);
             flex: 1;
             max-width: 160px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Fallback для браузеров без backdrop-filter */
-        @supports not (backdrop-filter: blur(10px)) {
-            button {
-                background: rgba(255, 255, 255, 0.1);
-            }
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         button:hover {
-            background: rgba(129, 140, 248, 0.15);
-            border-color: var(--accent-color);
-            transform: translateY(-1px);
+            background: rgba(244, 114, 182, 0.15);
+            border-color: var(--sunset-pink);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 114, 182, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         button:active {
-            transform: scale(0.96);
+            transform: translateY(0) scale(0.98);
         }
 
         button:focus-visible {
-            outline: 2px solid var(--accent-color);
+            outline: 2px solid var(--sunset-pink);
             outline-offset: 2px;
         }
 
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Grid System */
+        /* Retro Media Player Container */
         #bingo-container {
-            padding: 15px;
-            background: var(--bg-color);
-            border-radius: 16px;
+            padding: 20px;
+            background: linear-gradient(145deg, rgba(42, 39, 56, 0.6), rgba(30, 28, 42, 0.8));
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 10px;
             width: 100%;
         }
 
+        /* Retro Bingo Cards with Sticky Note Vibe */
         .card {
             aspect-ratio: 1;
             background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 8px;
+            border: 1.5px solid var(--card-border);
+            border-radius: 16px;
+            padding: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-size: 0.85rem;
-            line-height: 1.3;
+            font-size: 0.88rem;
+            line-height: 1.35;
             font-weight: 500;
             cursor: pointer;
             user-select: none;
@@ -229,37 +262,31 @@
             overflow: hidden;
             word-break: break-word;
             hyphens: auto;
-            -webkit-tap-highlight-color: transparent;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
-                        0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
 
         .card:hover {
             background: var(--card-hover);
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-                        0 8px 24px rgba(0, 0, 0, 0.15);
-            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(244, 114, 182, 0.25),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-color: rgba(244, 114, 182, 0.4);
         }
 
-        .card:focus-visible {
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
-        }
-
+        /* Selected Card - "Lit Up" Sticky Note Effect */
         .card.selected {
-            background: rgba(167, 139, 250, 0.35);
-            border: 2px solid #a78bfa;
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                        0 0 25px rgba(167, 139, 250, 0.6),
-                        0 4px 16px rgba(0, 0, 0, 0.3);
-            position: relative;
+            background: var(--card-selected);
+            border: 2px solid var(--warm-yellow);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.5),
+                        inset 0 0 20px rgba(251, 191, 36, 0.15),
+                        0 8px 20px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(12px);
         }
 
+        /* Diagonal Strikethrough Line */
         .card.selected::before {
             content: '';
             position: absolute;
@@ -267,161 +294,97 @@
             left: -5%;
             right: -5%;
             height: 3px;
-            background: linear-gradient(90deg, transparent 0%, #a78bfa 10%, #f472b6 50%, #a78bfa 90%, transparent 100%);
-            transform: translateY(-50%) rotate(-15deg);
-            box-shadow: 0 0 10px rgba(167, 139, 250, 0.8),
-                        0 0 20px rgba(167, 139, 250, 0.4);
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--warm-yellow) 15%,
+                var(--sunset-pink) 50%,
+                var(--warm-yellow) 85%,
+                transparent 100%
+            );
+            transform: translateY(-50%) rotate(-12deg);
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.8),
+                        0 0 25px rgba(251, 191, 36, 0.4);
             pointer-events: none;
         }
 
         .card.selected::after {
             content: '✓';
             position: absolute;
-            bottom: 4px;
-            right: 6px;
-            font-size: 1.3rem;
-            color: #e0d7ff;
+            bottom: 6px;
+            right: 8px;
+            font-size: 1.4rem;
+            color: var(--warm-yellow);
             font-weight: bold;
-            text-shadow: 0 0 12px rgba(167, 139, 250, 1),
-                         0 2px 4px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 15px rgba(251, 191, 36, 1),
+                         0 2px 5px rgba(0, 0, 0, 0.8);
             z-index: 1;
         }
 
+        /* Win State - Relaxing Neon Pulse */
         .card.bingo-line {
-            background: rgba(52, 211, 153, 0.4);
-            border: 3px solid #34d399;
-            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
-                        0 0 30px rgba(52, 211, 153, 0.8),
-                        0 4px 16px rgba(0, 0, 0, 0.3);
-            animation: winPulse 0.5s ease-in-out;
+            background: rgba(45, 212, 191, 0.3);
+            border: 3px solid var(--win-color);
+            box-shadow: 0 0 35px var(--win-glow),
+                        inset 0 0 25px rgba(45, 212, 191, 0.2),
+                        0 8px 24px rgba(0, 0, 0, 0.4);
+            animation: neonPulse 1.5s ease-in-out infinite;
         }
 
         .card.bingo-line::before {
-            background: linear-gradient(90deg, transparent 0%, #34d399 10%, #10b981 50%, #34d399 90%, transparent 100%) !important;
-            box-shadow: 0 0 15px rgba(52, 211, 153, 1),
-                        0 0 25px rgba(52, 211, 153, 0.6) !important;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                var(--retro-teal) 15%,
+                #2dd4bf 50%,
+                var(--retro-teal) 85%,
+                transparent 100%
+            ) !important;
+            box-shadow: 0 0 18px rgba(45, 212, 191, 1),
+                        0 0 30px var(--win-glow) !important;
         }
 
         .card.bingo-line::after {
             color: #d1fae5 !important;
-            font-size: 1.4rem !important;
-            text-shadow: 0 0 15px rgba(52, 211, 153, 1),
-                         0 2px 4px rgba(0, 0, 0, 0.9) !important;
+            font-size: 1.5rem !important;
+            text-shadow: 0 0 20px rgba(45, 212, 191, 1),
+                         0 2px 6px rgba(0, 0, 0, 0.9) !important;
         }
 
-        @keyframes winPulse {
-            0%, 100% { transform: scale(1); }
+        @keyframes neonPulse {
+            0%, 100% {
+                box-shadow: 0 0 35px var(--win-glow),
+                            inset 0 0 25px rgba(45, 212, 191, 0.2),
+                            0 8px 24px rgba(0, 0, 0, 0.4);
+            }
             50% {
-                transform: scale(1.08);
-                box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.4),
-                            0 0 35px rgba(52, 211, 153, 0.7),
-                            0 8px 24px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 0 50px rgba(45, 212, 191, 0.9),
+                            inset 0 0 35px rgba(45, 212, 191, 0.35),
+                            0 12px 32px rgba(0, 0, 0, 0.5);
             }
         }
 
-
-        /* Loading state */
-        .loading {
-            pointer-events: none;
-            opacity: 0.6;
-        }
-
-        .loading::after {
-            content: '⏳';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-        }
-
-        /* --- MOBILE ADAPTATION --- */
-        @media (max-width: 768px) {
-            body {
-                padding-top: 10px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            #bingo-container {
-                padding: 10px;
-            }
-
-            .card {
-                font-size: 0.75rem;
-                padding: 6px;
-            }
-
-            /* Убираем hover эффекты на тач-устройствах */
-            .card:hover {
-                transform: none;
-                background: var(--card-bg);
-            }
-
-            button:hover {
-                transform: none;
-                background: var(--card-bg);
-            }
-        }
-
-        /* Accessibility: prefers-reduced-motion */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        /* Preview Modal */
-        .preview-modal {
-            display: none;
+        /* Toast Notification */
+        .toast {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .preview-modal.active {
-            display: flex;
-        }
-
-        .preview-content {
-            background: var(--bg-color);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 20px;
-            max-width: 90vw;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .preview-image {
-            max-width: 100%;
-            max-height: 60vh;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--sunset-pink), var(--purple-glow));
+            color: white;
+            padding: 16px 24px;
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 8px 24px rgba(244, 114, 182, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
         }
 
-        .preview-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .preview-actions button {
-            flex: 0 1 auto;
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Start Screen */
@@ -437,7 +400,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 30px;
+            gap: 35px;
             transition: opacity 0.5s ease;
         }
 
@@ -447,97 +410,96 @@
         }
 
         .start-screen h2 {
-            font-size: 2.5rem;
+            font-family: 'VT323', monospace;
+            font-size: 4rem;
             margin: 0;
-            font-weight: 600;
-            background: var(--accent-gradient);
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, var(--warm-yellow) 0%, var(--sunset-pink) 50%, var(--purple-glow) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.5));
-            animation: pulse-glow 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 40px rgba(251, 191, 36, 0.6));
+            animation: glowPulse 3s ease-in-out infinite;
         }
 
         .start-screen p {
-            font-size: 1rem;
-            opacity: 0.7;
-            max-width: 400px;
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 450px;
             text-align: center;
-            line-height: 1.6;
+            line-height: 1.7;
             padding: 0 20px;
         }
 
         #start-btn {
-            font-size: 1rem;
-            padding: 14px 36px;
-            background: var(--accent-gradient);
-            border: 2px solid transparent;
-            color: #fff;
-            border-radius: 12px;
-            cursor: pointer;
-            font-family: inherit;
+            font-size: 1.1rem;
+            padding: 16px 48px;
+            background: linear-gradient(135deg, var(--sunset-pink), var(--purple-glow));
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 50px;
             font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 20px rgba(167, 139, 250, 0.3),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
             max-width: none;
             flex: 0 0 auto;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #start-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: var(--accent-gradient-hover);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        #start-btn:hover::before {
-            opacity: 1;
         }
 
         #start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(167, 139, 250, 0.4),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, var(--purple-glow), var(--sunset-pink));
+            box-shadow: 0 12px 40px rgba(244, 114, 182, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.4);
         }
 
-        #start-btn span {
-            position: relative;
-            z-index: 1;
+        @keyframes glowPulse {
+            0%, 100% { filter: drop-shadow(0 0 40px rgba(251, 191, 36, 0.6)); }
+            50% { filter: drop-shadow(0 0 60px rgba(251, 191, 36, 0.9)); }
         }
 
-        #start-btn:active {
-            transform: scale(0.98);
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.5)); }
-            50% { filter: drop-shadow(0 0 50px rgba(167, 139, 250, 0.8)); }
-        }
-
-        /* Hide game elements initially */
         body.not-started .controls,
         body.not-started #bingo-container {
             opacity: 0;
             pointer-events: none;
         }
 
+        /* Mobile Adaptation */
         @media (max-width: 768px) {
-            .start-screen h2 {
-                font-size: 2rem;
+            body { padding-top: 10px; }
+
+            h1 { font-size: 2.5rem; }
+
+            #bingo-container { padding: 15px; max-width: 100%; }
+
+            .card {
+                font-size: 0.78rem;
+                padding: 8px;
             }
 
-            .start-screen p {
-                font-size: 0.9rem;
+            .card:hover {
+                transform: none;
+                background: var(--card-bg);
             }
 
-            #start-btn {
-                font-size: 0.95rem;
-                padding: 12px 32px;
+            button:hover {
+                transform: none;
+            }
+
+            .start-screen h2 { font-size: 3rem; }
+            .start-screen p { font-size: 0.95rem; }
+            #start-btn { font-size: 1rem; padding: 14px 40px; }
+
+            .toast {
+                top: auto;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
@@ -546,6 +508,11 @@
 
     <div class="ambient-glow" aria-hidden="true"></div>
 
+    <!-- Background Audio -->
+    <audio id="bg-audio" loop>
+        <source src="lofi-bg.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Start Screen -->
     <div class="start-screen" id="start-screen">
         <h2>BA BINGO</h2>
@@ -553,7 +520,7 @@
             Игра для бизнес-аналитиков и команд разработки.<br>
             Отмечайте знакомые ситуации и собирайте линии!
         </p>
-        <button id="start-btn" aria-label="Начать игру"><span>▶ Старт</span></button>
+        <button id="start-btn" aria-label="Начать игру">▶ Старт</button>
     </div>
 
     <header>
@@ -570,24 +537,16 @@
         <div class="grid" id="grid" role="grid" aria-label="Игровое поле бинго"></div>
     </div>
 
-    <!-- Preview Modal -->
-    <div class="preview-modal" id="preview-modal" role="dialog" aria-labelledby="preview-title" aria-modal="true">
-        <div class="preview-content">
-            <h2 id="preview-title" style="text-align: center; margin: 0;">Превью скриншота</h2>
-            <img class="preview-image" id="preview-image" alt="Превью скриншота бинго">
-            <div class="preview-actions">
-                <button id="download-btn" aria-label="Скачать скриншот">💾 Скачать</button>
-                <button id="close-preview-btn" aria-label="Закрыть превью">❌ Закрыть</button>
-            </div>
-        </div>
-    </div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
 
     <noscript>
-        <div style="text-align: center; margin-top: 20px; padding: 20px; background: rgba(255,0,0,0.1); border-radius: 8px;">
+        <div style="text-align: center; margin-top: 20px; padding: 20px; background: rgba(255,0,0,0.1); border-radius: 12px; position: relative; z-index: 10;">
             <p>⚠️ Для работы игры необходимо включить JavaScript</p>
         </div>
     </noscript>
 
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" defer></script>
     <script>
         const phrases = [
             "Это не баг, это фича", "У Вигерса так написано", "ТЗ_final_v12.docx",
@@ -605,9 +564,8 @@
 
         const gridSize = 4;
         let boardState = [];
-        let html2canvasLoaded = false;
 
-        // Fisher-Yates shuffle (правильный алгоритм)
+        // Fisher-Yates shuffle
         function shuffle(array) {
             const shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -632,7 +590,6 @@
                 card.setAttribute('aria-pressed', 'false');
                 card.setAttribute('aria-label', text);
 
-                // Клик и клавиатура
                 card.addEventListener('click', () => toggleCard(card, index));
                 card.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -648,11 +605,7 @@
 
         function toggleCard(card, index) {
             const state = boardState[index];
-
-            // Prevent deselecting - once selected, always selected
-            if (state.selected) {
-                return;
-            }
+            if (state.selected) return; // Prevent deselecting
 
             state.selected = true;
             card.classList.add('selected');
@@ -664,14 +617,14 @@
             const size = gridSize;
             let winningIndices = new Set();
 
-            // Строки
+            // Rows
             for (let i = 0; i < size; i++) {
                 if (boardState.slice(i * size, (i + 1) * size).every(c => c.selected)) {
                     for (let k = 0; k < size; k++) winningIndices.add(i * size + k);
                 }
             }
 
-            // Колонки
+            // Columns
             for (let i = 0; i < size; i++) {
                 let colIndices = Array.from({length: size}, (_, j) => i + j * size);
                 if (colIndices.every(idx => boardState[idx].selected)) {
@@ -679,7 +632,7 @@
                 }
             }
 
-            // Диагонали
+            // Diagonals
             let d1 = Array.from({length: size}, (_, i) => i * (size + 1));
             let d2 = Array.from({length: size}, (_, i) => (i + 1) * (size - 1));
             if (d1.every(idx => boardState[idx].selected)) d1.forEach(idx => winningIndices.add(idx));
@@ -688,140 +641,82 @@
             boardState.forEach((state, idx) => {
                 state.el.classList.toggle('bingo-line', winningIndices.has(idx));
             });
-
-            // Announce win для screen readers
-            if (winningIndices.size > 0) {
-                const announcement = document.createElement('div');
-                announcement.setAttribute('role', 'status');
-                announcement.setAttribute('aria-live', 'polite');
-                announcement.style.position = 'absolute';
-                announcement.style.left = '-10000px';
-                announcement.textContent = 'Бинго! Выигрышная линия собрана!';
-                document.body.appendChild(announcement);
-                setTimeout(() => announcement.remove(), 1000);
-            }
         }
 
-        // Lazy load html2canvas
-        function loadHtml2Canvas() {
-            return new Promise((resolve, reject) => {
-                if (html2canvasLoaded) {
-                    resolve();
-                    return;
-                }
-
-                const script = document.createElement('script');
-                script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-                script.onload = () => {
-                    html2canvasLoaded = true;
-                    resolve();
-                };
-                script.onerror = () => reject(new Error('Failed to load html2canvas'));
-                document.head.appendChild(script);
-            });
-        }
-
-        let currentScreenshotDataUrl = null;
-
+        // Screenshot with clipboard copy
         async function takeScreenshot() {
             const btn = document.getElementById('screenshot-btn');
             const element = document.getElementById("bingo-container");
 
             try {
                 btn.disabled = true;
-                btn.textContent = '⏳ Загрузка...';
-
-                await loadHtml2Canvas();
-
-                btn.textContent = '📸 Создание...';
+                btn.textContent = '⏳ Создание...';
 
                 const canvas = await html2canvas(element, {
-                    backgroundColor: "#0f172a",
+                    backgroundColor: "#1e1c2a",
                     scale: 3,
                     logging: false,
                     useCORS: true
                 });
 
-                currentScreenshotDataUrl = canvas.toDataURL('image/png');
+                // Convert to blob
+                canvas.toBlob(async (blob) => {
+                    try {
+                        await navigator.clipboard.write([
+                            new ClipboardItem({ 'image/png': blob })
+                        ]);
 
-                // Показываем превью
-                const modal = document.getElementById('preview-modal');
-                const previewImg = document.getElementById('preview-image');
-                previewImg.src = currentScreenshotDataUrl;
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Отключаем скролл
+                        showToast('📸 Скриншот скопирован в буфер обмена!');
+                    } catch (err) {
+                        console.error('Clipboard copy failed:', err);
+                        showToast('❌ Ошибка копирования. Попробуйте ещё раз.');
+                    }
+                }, 'image/png');
 
                 btn.textContent = '📸 Скрин';
                 btn.disabled = false;
 
             } catch (error) {
                 console.error('Screenshot failed:', error);
-                btn.textContent = '❌ Ошибка';
-                setTimeout(() => {
-                    btn.textContent = '📸 Скрин';
-                    btn.disabled = false;
-                }, 2000);
+                showToast('❌ Ошибка создания скриншота');
+                btn.textContent = '📸 Скрин';
+                btn.disabled = false;
             }
         }
 
-        function downloadScreenshot() {
-            if (!currentScreenshotDataUrl) return;
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
 
-            const link = document.createElement('a');
-            link.download = `ba-bingo-${Date.now()}.png`;
-            link.href = currentScreenshotDataUrl;
-            link.click();
-
-            closePreview();
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
-        function closePreview() {
-            const modal = document.getElementById('preview-modal');
-            modal.classList.remove('active');
-            document.body.style.overflow = ''; // Включаем скролл обратно
-        }
-
-        // Event listeners
-        document.getElementById('restart-btn').addEventListener('click', generateBoard);
-        document.getElementById('screenshot-btn').addEventListener('click', takeScreenshot);
-        document.getElementById('download-btn').addEventListener('click', downloadScreenshot);
-        document.getElementById('close-preview-btn').addEventListener('click', closePreview);
-
-        // Закрытие модалки по клику на фон
-        document.getElementById('preview-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'preview-modal') {
-                closePreview();
-            }
-        });
-
-        // Закрытие модалки по Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closePreview();
-            }
-        });
-
-        // Start Game Flow
+        // Start Game with Music
         function startGame() {
             const startScreen = document.getElementById('start-screen');
+            const bgAudio = document.getElementById('bg-audio');
+
+            // Start background music
+            bgAudio.play().catch(err => console.log('Audio autoplay blocked:', err));
 
             // Hide start screen
             startScreen.classList.add('hidden');
-
-            // Show game elements
             document.body.classList.remove('not-started');
 
-            // Generate board after animation
+            // Generate board
             setTimeout(() => {
                 generateBoard();
             }, 500);
         }
 
-        // Start button listener
+        // Event listeners
         document.getElementById('start-btn').addEventListener('click', startGame);
-
-        // Note: Don't generate board on load anymore
-        // generateBoard(); -- removed
+        document.getElementById('restart-btn').addEventListener('click', generateBoard);
+        document.getElementById('screenshot-btn').addEventListener('click', takeScreenshot);
     </script>
 </body>
 </html>

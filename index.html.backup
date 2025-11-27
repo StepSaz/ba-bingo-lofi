@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="BA Bingo: интерактивная игра для бизнес-аналитиков. Отмечайте типичные рабочие ситуации и собирайте Бинго!">
+    <meta name="keywords" content="бизнес аналитик, бинго, игра, IT, разработка">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="BA Bingo: Lofi Edition">
+    <meta property="og:description" content="Интерактивная игра для бизнес-аналитиков с Lofi атмосферой">
+    <meta property="og:image" content="https://raw.githubusercontent.com/StepSaz/ba-bingo-lofi/main/preview.png">
+
+    <title>BA Bingo: Lofi Edition</title>
+
+    <!-- Preconnect для оптимизации -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Lofi "Cozy Midnight Study Session" Palette */
+            --bg-color: #1e1c2a;
+            --bg-secondary: #2a2738;
+
+            /* Retro Accents */
+            --sunset-pink: #f472b6;
+            --warm-yellow: #fbbf24;
+            --retro-teal: #2dd4bf;
+            --purple-glow: #a78bfa;
+
+            /* Card styling */
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-hover: rgba(244, 114, 182, 0.15);
+            --card-selected: rgba(251, 191, 36, 0.2);
+
+            /* Typography */
+            --text-color: #e5e5e5;
+            --text-secondary: rgba(229, 229, 229, 0.7);
+
+            /* Win state */
+            --win-color: #2dd4bf;
+            --win-glow: rgba(45, 212, 191, 0.6);
+
+            --mobile-breakpoint: 768px;
+        }
+
+        /* Minimal CSS Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, var(--bg-secondary) 0%, var(--bg-color) 100%);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 10px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Decoration - Animated Gradient Blobs */
+        .ambient-glow {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .ambient-glow::before,
+        .ambient-glow::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.2;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .ambient-glow::before {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #a78bfa 0%, transparent 70%);
+            top: -200px;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .ambient-glow::after {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #f472b6 0%, transparent 70%);
+            bottom: -150px;
+            right: 10%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(1.1); }
+            50% { transform: translate(-30px, 20px) scale(0.9); }
+            75% { transform: translate(40px, 40px) scale(1.05); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.3));
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Controls */
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        button {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            flex: 1;
+            max-width: 160px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Fallback для браузеров без backdrop-filter */
+        @supports not (backdrop-filter: blur(10px)) {
+            button {
+                background: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        button:hover {
+            background: rgba(129, 140, 248, 0.15);
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Grid System */
+        #bingo-container {
+            padding: 15px;
+            background: var(--bg-color);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            width: 100%;
+        }
+
+        .card {
+            aspect-ratio: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+            word-break: break-word;
+            hyphens: auto;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+                        0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            background: var(--card-hover);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+                        0 8px 24px rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .card:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        .card.selected {
+            background: rgba(167, 139, 250, 0.35);
+            border: 2px solid #a78bfa;
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+                        0 0 25px rgba(167, 139, 250, 0.6),
+                        0 4px 16px rgba(0, 0, 0, 0.3);
+            position: relative;
+            backdrop-filter: blur(12px);
+        }
+
+        .card.selected::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -5%;
+            right: -5%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, #a78bfa 10%, #f472b6 50%, #a78bfa 90%, transparent 100%);
+            transform: translateY(-50%) rotate(-15deg);
+            box-shadow: 0 0 10px rgba(167, 139, 250, 0.8),
+                        0 0 20px rgba(167, 139, 250, 0.4);
+            pointer-events: none;
+        }
+
+        .card.selected::after {
+            content: '✓';
+            position: absolute;
+            bottom: 4px;
+            right: 6px;
+            font-size: 1.3rem;
+            color: #e0d7ff;
+            font-weight: bold;
+            text-shadow: 0 0 12px rgba(167, 139, 250, 1),
+                         0 2px 4px rgba(0, 0, 0, 0.8);
+            z-index: 1;
+        }
+
+        .card.bingo-line {
+            background: rgba(52, 211, 153, 0.4);
+            border: 3px solid #34d399;
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.25),
+                        0 0 30px rgba(52, 211, 153, 0.8),
+                        0 4px 16px rgba(0, 0, 0, 0.3);
+            animation: winPulse 0.5s ease-in-out;
+        }
+
+        .card.bingo-line::before {
+            background: linear-gradient(90deg, transparent 0%, #34d399 10%, #10b981 50%, #34d399 90%, transparent 100%) !important;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 1),
+                        0 0 25px rgba(52, 211, 153, 0.6) !important;
+        }
+
+        .card.bingo-line::after {
+            color: #d1fae5 !important;
+            font-size: 1.4rem !important;
+            text-shadow: 0 0 15px rgba(52, 211, 153, 1),
+                         0 2px 4px rgba(0, 0, 0, 0.9) !important;
+        }
+
+        @keyframes winPulse {
+            0%, 100% { transform: scale(1); }
+            50% {
+                transform: scale(1.08);
+                box-shadow: inset 0 1px 0 0 rgba(52, 211, 153, 0.4),
+                            0 0 35px rgba(52, 211, 153, 0.7),
+                            0 8px 24px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+
+        /* Loading state */
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .loading::after {
+            content: '⏳';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+        }
+
+        /* --- MOBILE ADAPTATION --- */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            #bingo-container {
+                padding: 10px;
+            }
+
+            .card {
+                font-size: 0.75rem;
+                padding: 6px;
+            }
+
+            /* Убираем hover эффекты на тач-устройствах */
+            .card:hover {
+                transform: none;
+                background: var(--card-bg);
+            }
+
+            button:hover {
+                transform: none;
+                background: var(--card-bg);
+            }
+        }
+
+        /* Accessibility: prefers-reduced-motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Preview Modal */
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .preview-modal.active {
+            display: flex;
+        }
+
+        .preview-content {
+            background: var(--bg-color);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 60vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .preview-actions button {
+            flex: 0 1 auto;
+        }
+
+        /* Start Screen */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transition: opacity 0.5s ease;
+        }
+
+        .start-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .start-screen h2 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 600;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.5));
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .start-screen p {
+            font-size: 1rem;
+            opacity: 0.7;
+            max-width: 400px;
+            text-align: center;
+            line-height: 1.6;
+            padding: 0 20px;
+        }
+
+        #start-btn {
+            font-size: 1rem;
+            padding: 14px 36px;
+            background: var(--accent-gradient);
+            border: 2px solid transparent;
+            color: #fff;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 20px rgba(167, 139, 250, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            max-width: none;
+            flex: 0 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #start-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent-gradient-hover);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #start-btn:hover::before {
+            opacity: 1;
+        }
+
+        #start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(167, 139, 250, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        #start-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        #start-btn:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.5)); }
+            50% { filter: drop-shadow(0 0 50px rgba(167, 139, 250, 0.8)); }
+        }
+
+        /* Hide game elements initially */
+        body.not-started .controls,
+        body.not-started #bingo-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .start-screen h2 {
+                font-size: 2rem;
+            }
+
+            .start-screen p {
+                font-size: 0.9rem;
+            }
+
+            #start-btn {
+                font-size: 0.95rem;
+                padding: 12px 32px;
+            }
+        }
+    </style>
+</head>
+<body class="not-started">
+
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <!-- Start Screen -->
+    <div class="start-screen" id="start-screen">
+        <h2>BA BINGO</h2>
+        <p>
+            Игра для бизнес-аналитиков и команд разработки.<br>
+            Отмечайте знакомые ситуации и собирайте линии!
+        </p>
+        <button id="start-btn" aria-label="Начать игру"><span>▶ Старт</span></button>
+    </div>
+
+    <header>
+        <h1>BA BINGO</h1>
+        <div class="subtitle">Relax & Requirements</div>
+    </header>
+
+    <div class="controls">
+        <button id="restart-btn" aria-label="Перезапустить игру">🔄 Рестарт</button>
+        <button id="screenshot-btn" aria-label="Сделать скриншот">📸 Скрин</button>
+    </div>
+
+    <div id="bingo-container">
+        <div class="grid" id="grid" role="grid" aria-label="Игровое поле бинго"></div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="preview-modal" id="preview-modal" role="dialog" aria-labelledby="preview-title" aria-modal="true">
+        <div class="preview-content">
+            <h2 id="preview-title" style="text-align: center; margin: 0;">Превью скриншота</h2>
+            <img class="preview-image" id="preview-image" alt="Превью скриншота бинго">
+            <div class="preview-actions">
+                <button id="download-btn" aria-label="Скачать скриншот">💾 Скачать</button>
+                <button id="close-preview-btn" aria-label="Закрыть превью">❌ Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <noscript>
+        <div style="text-align: center; margin-top: 20px; padding: 20px; background: rgba(255,0,0,0.1); border-radius: 8px;">
+            <p>⚠️ Для работы игры необходимо включить JavaScript</p>
+        </div>
+    </noscript>
+
+    <script>
+        const phrases = [
+            "Это не баг, это фича", "У Вигерса так написано", "ТЗ_final_v12.docx",
+            "Сделай красиво", "Сам догадайся", "А в сторе не так",
+            "Мы передумали", "Поиграть со шрифтами", "Кнопка 'Сделать хорошо'",
+            "Просто добавить поле", "Бюджет есть, но нет", "Давай в бэклог",
+            "Это не в MVP", "Нет в документации", "Как у Apple",
+            "У меня работает", "Мокай данные", "Это легаси", "Давай хардкодом",
+            "Баг на требования", "Стенд упал", "Митинг вместо письма",
+            "UML не смотрят", "Забыл Confluence", "Сроки — вчера",
+            "Уточнение на уточнение", "Конфликт в Git", "JSON не валидный",
+            "Созвон на 5 мин", "Я так вижу", "Клиент не знает",
+            "Анализ ради анализа"
+        ];
+
+        const gridSize = 4;
+        let boardState = [];
+        let html2canvasLoaded = false;
+
+        // Fisher-Yates shuffle (правильный алгоритм)
+        function shuffle(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function generateBoard() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            boardState = [];
+            const shuffledPhrases = shuffle(phrases).slice(0, gridSize * gridSize);
+
+            shuffledPhrases.forEach((text, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerText = text;
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-pressed', 'false');
+                card.setAttribute('aria-label', text);
+
+                // Клик и клавиатура
+                card.addEventListener('click', () => toggleCard(card, index));
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleCard(card, index);
+                    }
+                });
+
+                grid.appendChild(card);
+                boardState.push({ selected: false, el: card });
+            });
+        }
+
+        function toggleCard(card, index) {
+            const state = boardState[index];
+
+            // Prevent deselecting - once selected, always selected
+            if (state.selected) {
+                return;
+            }
+
+            state.selected = true;
+            card.classList.add('selected');
+            card.setAttribute('aria-pressed', 'true');
+            checkWin();
+        }
+
+        function checkWin() {
+            const size = gridSize;
+            let winningIndices = new Set();
+
+            // Строки
+            for (let i = 0; i < size; i++) {
+                if (boardState.slice(i * size, (i + 1) * size).every(c => c.selected)) {
+                    for (let k = 0; k < size; k++) winningIndices.add(i * size + k);
+                }
+            }
+
+            // Колонки
+            for (let i = 0; i < size; i++) {
+                let colIndices = Array.from({length: size}, (_, j) => i + j * size);
+                if (colIndices.every(idx => boardState[idx].selected)) {
+                    colIndices.forEach(idx => winningIndices.add(idx));
+                }
+            }
+
+            // Диагонали
+            let d1 = Array.from({length: size}, (_, i) => i * (size + 1));
+            let d2 = Array.from({length: size}, (_, i) => (i + 1) * (size - 1));
+            if (d1.every(idx => boardState[idx].selected)) d1.forEach(idx => winningIndices.add(idx));
+            if (d2.every(idx => boardState[idx].selected)) d2.forEach(idx => winningIndices.add(idx));
+
+            boardState.forEach((state, idx) => {
+                state.el.classList.toggle('bingo-line', winningIndices.has(idx));
+            });
+
+            // Announce win для screen readers
+            if (winningIndices.size > 0) {
+                const announcement = document.createElement('div');
+                announcement.setAttribute('role', 'status');
+                announcement.setAttribute('aria-live', 'polite');
+                announcement.style.position = 'absolute';
+                announcement.style.left = '-10000px';
+                announcement.textContent = 'Бинго! Выигрышная линия собрана!';
+                document.body.appendChild(announcement);
+                setTimeout(() => announcement.remove(), 1000);
+            }
+        }
+
+        // Lazy load html2canvas
+        function loadHtml2Canvas() {
+            return new Promise((resolve, reject) => {
+                if (html2canvasLoaded) {
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+                script.onload = () => {
+                    html2canvasLoaded = true;
+                    resolve();
+                };
+                script.onerror = () => reject(new Error('Failed to load html2canvas'));
+                document.head.appendChild(script);
+            });
+        }
+
+        let currentScreenshotDataUrl = null;
+
+        async function takeScreenshot() {
+            const btn = document.getElementById('screenshot-btn');
+            const element = document.getElementById("bingo-container");
+
+            try {
+                btn.disabled = true;
+                btn.textContent = '⏳ Загрузка...';
+
+                await loadHtml2Canvas();
+
+                btn.textContent = '📸 Создание...';
+
+                const canvas = await html2canvas(element, {
+                    backgroundColor: "#0f172a",
+                    scale: 3,
+                    logging: false,
+                    useCORS: true
+                });
+
+                currentScreenshotDataUrl = canvas.toDataURL('image/png');
+
+                // Показываем превью
+                const modal = document.getElementById('preview-modal');
+                const previewImg = document.getElementById('preview-image');
+                previewImg.src = currentScreenshotDataUrl;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Отключаем скролл
+
+                btn.textContent = '📸 Скрин';
+                btn.disabled = false;
+
+            } catch (error) {
+                console.error('Screenshot failed:', error);
+                btn.textContent = '❌ Ошибка';
+                setTimeout(() => {
+                    btn.textContent = '📸 Скрин';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        function downloadScreenshot() {
+            if (!currentScreenshotDataUrl) return;
+
+            const link = document.createElement('a');
+            link.download = `ba-bingo-${Date.now()}.png`;
+            link.href = currentScreenshotDataUrl;
+            link.click();
+
+            closePreview();
+        }
+
+        function closePreview() {
+            const modal = document.getElementById('preview-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Включаем скролл обратно
+        }
+
+        // Event listeners
+        document.getElementById('restart-btn').addEventListener('click', generateBoard);
+        document.getElementById('screenshot-btn').addEventListener('click', takeScreenshot);
+        document.getElementById('download-btn').addEventListener('click', downloadScreenshot);
+        document.getElementById('close-preview-btn').addEventListener('click', closePreview);
+
+        // Закрытие модалки по клику на фон
+        document.getElementById('preview-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'preview-modal') {
+                closePreview();
+            }
+        });
+
+        // Закрытие модалки по Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closePreview();
+            }
+        });
+
+        // Start Game Flow
+        function startGame() {
+            const startScreen = document.getElementById('start-screen');
+
+            // Hide start screen
+            startScreen.classList.add('hidden');
+
+            // Show game elements
+            document.body.classList.remove('not-started');
+
+            // Generate board after animation
+            setTimeout(() => {
+                generateBoard();
+            }, 500);
+        }
+
+        // Start button listener
+        document.getElementById('start-btn').addEventListener('click', startGame);
+
+        // Note: Don't generate board on load anymore
+        // generateBoard(); -- removed
+    </script>
+</body>
+</html>
