@@ -580,26 +580,13 @@
             transform: translateY(-2px);
         }
 
-        /* Footer */
-        footer {
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Quicksand', sans-serif;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.35);
-            z-index: 1001;
-            letter-spacing: 0.5px;
-        }
-
-        footer a {
+        .subtitle a {
             color: rgba(255, 255, 255, 0.5);
             text-decoration: none;
             transition: color 0.25s ease;
         }
 
-        footer a:hover {
+        .subtitle a:hover {
             color: var(--sunset-pink);
         }
 
@@ -770,7 +757,7 @@
 
     <header>
         <h1>BA BINGO</h1>
-        <div class="subtitle">Relax, Collect Points, Share</div>
+        <div class="subtitle">Created by <a href="https://sazanavets-ba.netlify.app/" target="_blank" rel="noopener noreferrer">Stepan S</a>, 2025</div>
     </header>
 
     <div class="controls">
@@ -814,9 +801,6 @@
             </button>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer>Created by <a href="https://sazanavets-ba.netlify.app/" target="_blank" rel="noopener noreferrer">Stepan S</a>, 2025</footer>
 
     <noscript>
         <div style="text-align: center; margin-top: 20px; padding: 20px; background: rgba(255,0,0,0.1); border-radius: 12px; position: relative; z-index: 10;">
@@ -1022,6 +1006,8 @@
         }
 
         // Screenshot with clipboard copy
+        let currentOverlay = null;
+
         async function takeScreenshot() {
             const btn = document.getElementById('screenshot-btn');
             const element = document.getElementById("bingo-container");
@@ -1030,6 +1016,12 @@
                 btn.disabled = true;
                 const originalIcon = btn.textContent;
                 btn.textContent = '⏳';
+
+                // Remove previous overlay if exists
+                if (currentOverlay && currentOverlay.parentNode) {
+                    currentOverlay.parentNode.removeChild(currentOverlay);
+                    currentOverlay = null;
+                }
 
                 // Create temporary overlay with score and URL
                 const overlay = document.createElement('div');
@@ -1072,6 +1064,7 @@
                 overlay.appendChild(urlText);
                 element.style.position = 'relative';
                 element.appendChild(overlay);
+                currentOverlay = overlay;
 
                 const canvas = await html2canvas(element, {
                     backgroundColor: "#1e1c2a",
@@ -1081,7 +1074,10 @@
                 });
 
                 // Remove overlay
-                element.removeChild(overlay);
+                if (currentOverlay && currentOverlay.parentNode) {
+                    currentOverlay.parentNode.removeChild(currentOverlay);
+                    currentOverlay = null;
+                }
 
                 // Convert to blob
                 canvas.toBlob(async (blob) => {
