@@ -746,6 +746,7 @@
             <span class="lang-text">EN</span>
         </button>
         <h2>BA BINGO</h2>
+        <div class="subtitle" style="margin-bottom: 20px;">Created by <a href="https://sazanavets-ba.netlify.app/" target="_blank" rel="noopener noreferrer">Stepan S</a>, 2025</div>
         <p id="start-description" data-lang-ru="Игра для бизнес-аналитиков и всех, кто в IT.<br>Отмечайте знакомые ситуации и собирайте линии!" data-lang-en="A game for business analysts and everyone in IT.<br>Mark familiar situations and collect lines!">
             A game for business analysts and everyone in IT.<br>
             Mark familiar situations and collect lines!
@@ -793,7 +794,7 @@
                 <li data-lang-ru="📋 Кликайте на карточки с знакомыми ситуациями (+10 очков)" data-lang-en="📋 Click cards with familiar situations (+10 points)">📋 Click cards with familiar situations (+10 points)</li>
                 <li data-lang-ru="✨ Собирайте линии для бонусных очков (50, 100, 150...)" data-lang-en="✨ Complete lines for bonus points (50, 100, 150...)">✨ Complete lines for bonus points (50, 100, 150...)</li>
                 <li data-lang-ru="↻ Начать заново - сброс игры" data-lang-en="↻ Restart - reset the game">↻ Restart - reset the game</li>
-                <li data-lang-ru="⬆ Поделиться - скопировать скриншот с очками" data-lang-en="⬆ Share - copy screenshot with score">⬆ Share - copy screenshot with score</li>
+                <li data-lang-ru="⬆ Поделиться - отправить ссылку на игру" data-lang-en="⬆ Share - send game link">⬆ Share - send game link</li>
                 <li data-lang-ru="🌐 Переключение языка сбрасывает игру" data-lang-en="🌐 Language switch resets the game">🌐 Language switch resets the game</li>
             </ul>
             <button id="tutorial-close" class="tutorial-btn">
@@ -808,7 +809,6 @@
         </div>
     </noscript>
 
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" defer></script>
     <script>
         const phrasesRU = [
             "Сторонняя команда задержала релиз", "Автоматизируем хаос", "ТЗ_final_v12_FINAL.docx",
@@ -1003,104 +1003,49 @@
             boardState.forEach((state, idx) => {
                 state.el.classList.toggle('bingo-line', winningIndices.has(idx));
             });
+
+            // Check if all cards are selected (full board completed)
+            if (boardState.every(c => c.selected)) {
+                const fullBoardBonus = 90;
+                score += fullBoardBonus;
+                updateScore();
+                const fullBoardMsg = currentLang === 'ru'
+                    ? `🎊 Все карточки собраны! Бонус +${fullBoardBonus}! Итого: ${score} 🏆`
+                    : `🎊 Full board completed! Bonus +${fullBoardBonus}! Total: ${score} 🏆`;
+                showToast(fullBoardMsg);
+            }
         }
 
-        // Screenshot with clipboard copy
-        let currentOverlay = null;
+        // Share game link
+        async function shareGame() {
+            const shareText = currentLang === 'ru'
+                ? `Я набрал в BA Bingo ${score} очков, сколько наберешь ты? https://ba-bingo.netlify.app`
+                : `I scored ${score} points in BA Bingo, how many can you score? https://ba-bingo.netlify.app`;
 
-        async function takeScreenshot() {
-            const btn = document.getElementById('screenshot-btn');
-            const element = document.getElementById("bingo-container");
+            const shareData = {
+                title: 'BA Bingo',
+                text: shareText
+            };
 
             try {
-                btn.disabled = true;
-                const originalIcon = btn.textContent;
-                btn.textContent = '⏳';
-
-                // Remove previous overlay if exists
-                if (currentOverlay && currentOverlay.parentNode) {
-                    currentOverlay.parentNode.removeChild(currentOverlay);
-                    currentOverlay = null;
+                // Try native share API first (works on mobile)
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    showToast(currentLang === 'ru' ? '✅ Поделились!' : '✅ Shared!');
+                } else {
+                    // Fallback: copy text with score to clipboard
+                    await navigator.clipboard.writeText(shareText);
+                    showToast(currentLang === 'ru' ? '🔗 Текст скопирован!' : '🔗 Text copied!');
                 }
-
-                // Create temporary overlay with score and URL
-                const overlay = document.createElement('div');
-                overlay.style.cssText = `
-                    position: absolute;
-                    bottom: 15px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: rgba(30, 28, 42, 0.95);
-                    padding: 12px 24px;
-                    border-radius: 16px;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    backdrop-filter: blur(10px);
-                    font-family: 'Quicksand', sans-serif;
-                    text-align: center;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-                    z-index: 1000;
-                `;
-
-                const scoreText = document.createElement('div');
-                scoreText.style.cssText = `
-                    font-size: 1.1rem;
-                    color: #fbbf24;
-                    font-weight: 600;
-                    margin-bottom: 4px;
-                    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-                `;
-                scoreText.textContent = `${currentLang === 'ru' ? 'Очки' : 'Score'}: ${score}`;
-
-                const urlText = document.createElement('div');
-                urlText.style.cssText = `
-                    font-size: 0.85rem;
-                    color: #f472b6;
-                    font-weight: 500;
-                    letter-spacing: 0.5px;
-                `;
-                urlText.textContent = 'ba-bingo.netlify.app';
-
-                overlay.appendChild(scoreText);
-                overlay.appendChild(urlText);
-                element.style.position = 'relative';
-                element.appendChild(overlay);
-                currentOverlay = overlay;
-
-                const canvas = await html2canvas(element, {
-                    backgroundColor: "#1e1c2a",
-                    scale: 3,
-                    logging: false,
-                    useCORS: true
-                });
-
-                // Remove overlay
-                if (currentOverlay && currentOverlay.parentNode) {
-                    currentOverlay.parentNode.removeChild(currentOverlay);
-                    currentOverlay = null;
-                }
-
-                // Convert to blob
-                canvas.toBlob(async (blob) => {
-                    try {
-                        await navigator.clipboard.write([
-                            new ClipboardItem({ 'image/png': blob })
-                        ]);
-
-                        showToast(currentLang === 'ru' ? '📸 Скриншот скопирован в буфер обмена!' : '📸 Screenshot copied to clipboard!');
-                    } catch (err) {
-                        console.error('Clipboard copy failed:', err);
-                        showToast(currentLang === 'ru' ? '❌ Ошибка копирования. Попробуйте ещё раз.' : '❌ Copy failed. Try again.');
-                    }
-                }, 'image/png');
-
-                btn.textContent = originalIcon;
-                btn.disabled = false;
-
             } catch (error) {
-                console.error('Screenshot failed:', error);
-                showToast(currentLang === 'ru' ? '❌ Ошибка создания скриншота' : '❌ Screenshot failed');
-                btn.textContent = '⬆';
-                btn.disabled = false;
+                console.error('Share failed:', error);
+                // If both fail, try copying the text
+                try {
+                    await navigator.clipboard.writeText(shareText);
+                    showToast(currentLang === 'ru' ? '🔗 Текст скопирован!' : '🔗 Text copied!');
+                } catch (err) {
+                    showToast(currentLang === 'ru' ? '❌ Не удалось поделиться' : '❌ Failed to share');
+                }
             }
         }
 
@@ -1161,7 +1106,7 @@
         // Event listeners
         document.getElementById('start-btn').addEventListener('click', startGame);
         document.getElementById('restart-btn').addEventListener('click', generateBoard);
-        document.getElementById('screenshot-btn').addEventListener('click', takeScreenshot);
+        document.getElementById('screenshot-btn').addEventListener('click', shareGame);
         document.getElementById('lang-btn').addEventListener('click', switchLanguage);
         document.getElementById('lang-btn-start').addEventListener('click', switchLanguage);
         document.getElementById('tutorial-close').addEventListener('click', hideTutorial);
