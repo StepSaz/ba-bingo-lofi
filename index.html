@@ -206,21 +206,52 @@
             flex-wrap: wrap;
         }
 
+        .icon-btn {
+            padding: 12px;
+            font-size: 1.5rem;
+            max-width: 50px;
+            min-width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .icon-btn {
+            --tooltip-text: attr(data-tooltip-en);
+        }
+
+        .icon-btn::after {
+            content: var(--tooltip-text, attr(data-tooltip-en));
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 28, 42, 0.95);
+            color: var(--warm-yellow);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-family: 'Quicksand', sans-serif;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            z-index: 100;
+        }
+
+        .icon-btn:hover::after {
+            opacity: 1;
+        }
+
         .lang-switcher {
-            padding: 10px 16px;
-            font-size: 0.9rem;
-            max-width: 100px;
-            gap: 6px;
+            padding: 12px;
             flex-shrink: 0;
         }
 
         .lang-flag {
-            font-size: 1.2rem;
-        }
-
-        .lang-text {
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 1.5rem;
         }
 
         .score-display {
@@ -272,25 +303,11 @@
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            flex: 1;
-            max-width: 180px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2),
                         inset 0 1px 0 rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-icon {
-            font-size: 1.5rem;
-            line-height: 1;
-            display: inline-block;
-        }
-
-        .btn-text {
-            font-size: 0.95rem;
-            letter-spacing: 0.3px;
         }
 
         button:hover {
@@ -310,17 +327,8 @@
             outline-offset: 2px;
         }
 
-        #restart-btn:hover .btn-icon {
-            animation: spin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        #screenshot-btn:hover .btn-icon {
+        #screenshot-btn:hover {
             animation: bounce-up 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
         }
 
         @keyframes bounce-up {
@@ -491,6 +499,85 @@
         .toast.show {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Tutorial Popup */
+        .tutorial-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .tutorial-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .tutorial-popup {
+            background: linear-gradient(145deg, rgba(42, 39, 56, 0.95), rgba(30, 28, 42, 0.95));
+            border: 2px solid var(--warm-yellow);
+            border-radius: 24px;
+            padding: 30px 40px;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
+                        0 0 40px rgba(251, 191, 36, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tutorial-overlay.show .tutorial-popup {
+            transform: scale(1);
+        }
+
+        .tutorial-popup h3 {
+            font-family: 'VT323', monospace;
+            font-size: 2rem;
+            margin: 0 0 20px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--warm-yellow) 0%, var(--sunset-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tutorial-popup ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+
+        .tutorial-popup li {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            padding: 10px 0;
+            line-height: 1.6;
+        }
+
+        .tutorial-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--sunset-pink), var(--purple-glow));
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .tutorial-btn:hover {
+            background: linear-gradient(135deg, var(--purple-glow), var(--sunset-pink));
+            transform: translateY(-2px);
         }
 
         /* Footer */
@@ -687,17 +774,14 @@
     </header>
 
     <div class="controls">
-        <button id="lang-btn" aria-label="Switch language" class="lang-switcher">
+        <button id="lang-btn" aria-label="Switch language" class="lang-switcher icon-btn" data-tooltip-ru="Переключить язык" data-tooltip-en="Switch language">
             <span class="lang-flag">🇬🇧</span>
-            <span class="lang-text">EN</span>
         </button>
-        <button id="restart-btn" aria-label="Restart game">
-            <span class="btn-icon">↻</span>
-            <span class="btn-text" data-lang-ru="Рестарт" data-lang-en="Restart">Restart</span>
+        <button id="restart-btn" aria-label="Restart game" class="icon-btn" data-tooltip-ru="Начать заново" data-tooltip-en="Restart">
+            ↻
         </button>
-        <button id="screenshot-btn" aria-label="Share">
-            <span class="btn-icon">⬆</span>
-            <span class="btn-text" data-lang-ru="Поделиться" data-lang-en="Share">Share</span>
+        <button id="screenshot-btn" aria-label="Share" class="icon-btn" data-tooltip-ru="Поделиться" data-tooltip-en="Share">
+            ⬆
         </button>
     </div>
 
@@ -714,6 +798,23 @@
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
 
+    <!-- Tutorial Popup -->
+    <div class="tutorial-overlay" id="tutorial">
+        <div class="tutorial-popup">
+            <h3 data-lang-ru="Как играть" data-lang-en="How to Play">How to Play</h3>
+            <ul>
+                <li data-lang-ru="📋 Кликайте на карточки с знакомыми ситуациями (+10 очков)" data-lang-en="📋 Click cards with familiar situations (+10 points)">📋 Click cards with familiar situations (+10 points)</li>
+                <li data-lang-ru="✨ Собирайте линии для бонусных очков (50, 100, 150...)" data-lang-en="✨ Complete lines for bonus points (50, 100, 150...)">✨ Complete lines for bonus points (50, 100, 150...)</li>
+                <li data-lang-ru="↻ Начать заново - сброс игры" data-lang-en="↻ Restart - reset the game">↻ Restart - reset the game</li>
+                <li data-lang-ru="⬆ Поделиться - скопировать скриншот с очками" data-lang-en="⬆ Share - copy screenshot with score">⬆ Share - copy screenshot with score</li>
+                <li data-lang-ru="🌐 Переключение языка сбрасывает игру" data-lang-en="🌐 Language switch resets the game">🌐 Language switch resets the game</li>
+            </ul>
+            <button id="tutorial-close" class="tutorial-btn">
+                <span data-lang-ru="Начать!" data-lang-en="Let's Go!">Let's Go!</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>Created by Stepan S, 2025</footer>
 
@@ -726,31 +827,31 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" defer></script>
     <script>
         const phrasesRU = [
-            "Это не баг, это фича", "У Вигерса так написано", "ТЗ_final_v12.docx",
-            "Сделай красиво", "Сам догадайся", "А в сторе не так",
-            "Мы передумали", "Поиграть со шрифтами", "Кнопка 'Сделать хорошо'",
-            "Просто добавить поле", "Бюджет есть, но нет", "Давай в бэклог",
-            "Это не в MVP", "Нет в документации", "Как у Apple",
-            "У меня работает", "Мокай данные", "Это легаси", "Давай хардкодом",
-            "Баг на требования", "Стенд упал", "Митинг вместо письма",
-            "UML не смотрят", "Забыл Confluence", "Сроки — вчера",
-            "Уточнение на уточнение", "Конфликт в Git", "JSON не валидный",
-            "Созвон на 5 мин", "Я так вижу", "Клиент не знает",
-            "Анализ ради анализа"
+            "Сторонняя команда задержала релиз", "Автоматизируем хаос", "ТЗ_final_v12_FINAL.docx",
+            "Быстрая таска (на месяц)", "Дев: «Не понял сторю, поясни»", "Тестируешь фичу весь день",
+            "Заказчик: «Мы передумали»", "Иди спроси и нам расскажешь", "Просто сделайте хорошо",
+            "Просто добавить поле", "А можно фичу в этот спринт?", "Давай в техдолг",
+            "Это не в MVP", "Нет доступа на док", "Хочу как у Uber/Apple",
+            "У меня работает", "Уже обсудили с СЕО, пиши ТЗ", "Это легаси",
+            "Давай хардкодом", "ПМ в отпуске, я за него", "Prod упал",
+            "Митинг вместо письма", "UML никто не смотрит", "Ссылка на Confluence битая",
+            "Сроки — вчера", "Уточнение на уточнение", "Рефайнмент на 2 часа",
+            "Оценка: ХЗ", "Созвон на '5 мин' (час)", "А возьмешь третий проект?",
+            "Верните как было", "Продакта нет"
         ];
 
         const phrasesEN = [
-            "It's not a bug, it's a feature", "BABOK says so", "requirements_final_v12.docx",
-            "Make it pretty", "You figure it out", "Not like in prod",
-            "We changed our mind", "Play with fonts", "Add 'Make it good' button",
-            "Just add a field", "Budget exists, but no", "Let's backlog it",
-            "Not in MVP", "Not documented", "Like Apple does",
-            "Works on my machine", "Mock the data", "It's legacy", "Let's hardcode it",
-            "Bug in requirements", "Test env is down", "Meeting instead of email",
-            "Nobody reads UML", "Forgot Confluence", "Deadline was yesterday",
-            "Clarification on clarification", "Git conflict", "Invalid JSON",
-            "5-minute call", "I see it this way", "Client doesn't know",
-            "Analysis for analysis sake"
+            "External team delayed release", "Automating chaos", "specs_final_v12_FINAL.docx",
+            "Quick task (took a month)", "Dev: 'Didn't get the story'", "Testing features all day",
+            "Client: 'We changed our mind'", "Go ask and let us know", "Just make it good",
+            "Just add a field", "Can we squeeze it into this sprint?", "Put it in tech debt",
+            "Not in MVP", "No access to the doc", "Make it like Uber/Apple",
+            "Works on my machine", "Discussed with CEO, write specs", "It's legacy code",
+            "Let's hardcode it", "PM on leave, I'm covering", "Prod is down",
+            "Meeting instead of email", "Nobody looks at UML", "Confluence link is broken",
+            "Deadline was yesterday", "Clarification on clarification", "Refinement dragged for 2 hrs",
+            "Estimate: IDK", "'5-minute call' (1 hour)", "Can you take a 3rd project?",
+            "Change it back", "No Product Owner"
         ];
 
         const gridSize = 4;
@@ -780,14 +881,11 @@
             [document.getElementById('lang-btn'), document.getElementById('lang-btn-start')].forEach(langBtn => {
                 if (!langBtn) return;
                 const langFlag = langBtn.querySelector('.lang-flag');
-                const langText = langBtn.querySelector('.lang-text');
 
                 if (lang === 'ru') {
                     langFlag.textContent = '🇷🇺';
-                    langText.textContent = 'RU';
                 } else {
                     langFlag.textContent = '🇬🇧';
-                    langText.textContent = 'EN';
                 }
             });
 
@@ -799,6 +897,12 @@
                 } else {
                     el.textContent = text;
                 }
+            });
+
+            // Update tooltips
+            document.querySelectorAll('[data-tooltip-ru]').forEach(btn => {
+                const tooltip = btn.getAttribute('data-tooltip-' + lang);
+                btn.style.setProperty('--tooltip-text', `"${tooltip}"`);
             });
         }
 
@@ -920,15 +1024,12 @@
         // Screenshot with clipboard copy
         async function takeScreenshot() {
             const btn = document.getElementById('screenshot-btn');
-            const btnIcon = btn.querySelector('.btn-icon');
-            const btnText = btn.querySelector('.btn-text');
             const element = document.getElementById("bingo-container");
 
             try {
                 btn.disabled = true;
-                const originalText = btnText.textContent;
-                btnIcon.textContent = '⏳';
-                btnText.textContent = currentLang === 'ru' ? 'Создание...' : 'Creating...';
+                const originalIcon = btn.textContent;
+                btn.textContent = '⏳';
 
                 // Create temporary overlay with score and URL
                 const overlay = document.createElement('div');
@@ -996,15 +1097,13 @@
                     }
                 }, 'image/png');
 
-                btnIcon.textContent = '⬆';
-                btnText.textContent = originalText;
+                btn.textContent = originalIcon;
                 btn.disabled = false;
 
             } catch (error) {
                 console.error('Screenshot failed:', error);
                 showToast(currentLang === 'ru' ? '❌ Ошибка создания скриншота' : '❌ Screenshot failed');
-                btnIcon.textContent = '⬆';
-                btnText.textContent = currentLang === 'ru' ? 'Поделиться' : 'Share';
+                btn.textContent = '⬆';
                 btn.disabled = false;
             }
         }
@@ -1035,62 +1134,31 @@
             // Generate board
             setTimeout(() => {
                 generateBoard();
+                // Show tutorial on first game
+                showTutorial();
             }, 500);
         }
 
-        // Language switcher
+        // Show tutorial
+        function showTutorial() {
+            const tutorial = document.getElementById('tutorial');
+            tutorial.classList.add('show');
+        }
+
+        // Hide tutorial
+        function hideTutorial() {
+            const tutorial = document.getElementById('tutorial');
+            tutorial.classList.remove('show');
+        }
+
+        // Language switcher - resets the game
         function switchLanguage() {
             const newLang = currentLang === 'ru' ? 'en' : 'ru';
+            updateLanguage(newLang);
 
-            // If game is in progress, preserve state and translate cards
+            // Reset game if in progress
             if (boardState.length > 0) {
-                const selectedIndices = boardState.map((state, idx) =>
-                    state.selected ? idx : null
-                ).filter(idx => idx !== null);
-
-                updateLanguage(newLang);
-
-                // Regenerate board with new language but keep selections
-                const grid = document.getElementById('grid');
-                grid.innerHTML = '';
-                const oldBoardState = [...boardState];
-                boardState = [];
-                const shuffledPhrases = shuffle(getCurrentPhrases()).slice(0, gridSize * gridSize);
-
-                shuffledPhrases.forEach((text, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerText = text;
-                    card.setAttribute('role', 'button');
-                    card.setAttribute('tabindex', '0');
-                    card.setAttribute('aria-pressed', 'false');
-                    card.setAttribute('aria-label', text);
-
-                    // Restore selection if it was selected before
-                    if (selectedIndices.includes(index)) {
-                        card.classList.add('selected');
-                        card.setAttribute('aria-pressed', 'true');
-                    }
-
-                    card.addEventListener('click', () => toggleCard(card, index));
-                    card.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            toggleCard(card, index);
-                        }
-                    });
-
-                    grid.appendChild(card);
-                    boardState.push({
-                        selected: selectedIndices.includes(index),
-                        el: card
-                    });
-                });
-
-                // Recheck win state
-                checkWin();
-            } else {
-                updateLanguage(newLang);
+                generateBoard();
             }
         }
 
@@ -1100,6 +1168,7 @@
         document.getElementById('screenshot-btn').addEventListener('click', takeScreenshot);
         document.getElementById('lang-btn').addEventListener('click', switchLanguage);
         document.getElementById('lang-btn-start').addEventListener('click', switchLanguage);
+        document.getElementById('tutorial-close').addEventListener('click', hideTutorial);
     </script>
 </body>
 </html>
