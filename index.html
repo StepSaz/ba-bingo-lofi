@@ -783,6 +783,9 @@
         <button id="lang-btn" aria-label="Switch language" class="lang-switcher icon-btn" data-tooltip-ru="Переключить язык" data-tooltip-en="Switch language">
             <span class="lang-flag">🇬🇧</span>
         </button>
+        <button id="sound-btn" aria-label="Toggle sound" class="icon-btn" data-tooltip-ru="Звук вкл/выкл" data-tooltip-en="Sound on/off">
+            🔊
+        </button>
         <button id="restart-btn" aria-label="Restart game" class="icon-btn" data-tooltip-ru="Начать заново" data-tooltip-en="Restart">
             ↻
         </button>
@@ -888,6 +891,7 @@
         let currentLang = 'en';
         let score = 0;
         let completedLines = new Set(); // Track which lines have been completed
+        let isSoundOn = true;
 
         // Fisher-Yates shuffle
         function shuffle(array) {
@@ -1148,10 +1152,27 @@
             }
         }
 
+        // Toggle sound on/off
+        function toggleSound() {
+            const bgAudio = document.getElementById('bg-audio');
+            const soundBtn = document.getElementById('sound-btn');
+
+            isSoundOn = !isSoundOn;
+
+            if (isSoundOn) {
+                bgAudio.play().catch(err => console.log('Audio play failed:', err));
+                soundBtn.textContent = '🔊';
+            } else {
+                bgAudio.pause();
+                soundBtn.textContent = '🔇';
+            }
+        }
+
         // Event listeners
         document.getElementById('start-btn').addEventListener('click', startGame);
         document.getElementById('restart-btn').addEventListener('click', generateBoard);
         document.getElementById('screenshot-btn').addEventListener('click', shareGame);
+        document.getElementById('sound-btn').addEventListener('click', toggleSound);
         document.getElementById('lang-btn').addEventListener('click', switchLanguage);
         document.getElementById('lang-btn-start').addEventListener('click', switchLanguage);
         document.getElementById('tutorial-close').addEventListener('click', hideTutorial);
